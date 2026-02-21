@@ -1,0 +1,275 @@
+@import "tailwindcss";
+
+@theme {
+  /* ===== Brand Palette =====
+     TODO (Agente UI/UX): Reemplazar los valores hex con la paleta del nuevo cliente.
+     Mantener los nombres de las variables, solo cambiar los colores.
+  ============================================ */
+
+  /* Primario — color dominante de la marca */
+  --color-brand-mustard: #F5A623;
+  --color-brand-mustard-light: #FFD166;
+  --color-brand-mustard-dark: #C8841A;
+
+  /* Bordo — "BURGA" text & burger layers */
+  --color-brand-bordo: #6B2D0E;
+  --color-brand-bordo-light: #8B3A12;
+  --color-brand-bordo-dark: #4A1E08;
+
+  /* Celeste Argentina — accent bar */
+  --color-brand-celeste: #75AADB;
+  --color-brand-celeste-dark: #4A8CC0;
+
+  /* Crema / Beige — logo background */
+  --color-brand-cream: #F5F0E0;
+  --color-brand-cream-dark: #EDE5CC;
+
+  /* ===== Dark theme surfaces ===== */
+  --color-dark-bg: #1A0F08;
+  /* very dark bordo-tinted */
+  --color-dark-surface: #241408;
+  --color-dark-card: #2C1A0C;
+  --color-dark-border: #3D2410;
+  --color-dark-text: #F5F0E0;
+  --color-dark-muted: #9A8070;
+
+  /* ===== Light theme surfaces ===== */
+  --color-light-bg: #F5F0E0;
+  --color-light-surface: #FFFDF7;
+  --color-light-card: #FFFDF7;
+  --color-light-border: #E8DFC8;
+  --color-light-text: #2C1A0C;
+  --color-light-muted: #7A6050;
+
+  /* Typography */
+  --font-family-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ===== BASE ===== */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Dark mode (default) */
+  body {
+    background-color: #1A0F08;
+    color: #F5F0E0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    min-height: 100dvh;
+    overscroll-behavior: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Light mode via system preference */
+  @media (prefers-color-scheme: light) {
+    body {
+      background-color: #F5F0E0;
+      color: #2C1A0C;
+    }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #F5A623;
+    border-radius: 2px;
+  }
+
+  /* Select options */
+  select option {
+    background: #2C1A0C;
+    color: #F5F0E0;
+  }
+
+  @media (prefers-color-scheme: light) {
+    select option {
+      background: #FFFDF7;
+      color: #2C1A0C;
+    }
+  }
+}
+
+/* ===== THEME UTILITIES ===== */
+@layer utilities {
+
+  /* Surfaces */
+  .theme-bg {
+    background-color: #1A0F08;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .theme-bg {
+      background-color: #F5F0E0;
+    }
+  }
+
+  .theme-surface {
+    background-color: #241408;
+    border-color: #3D2410;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .theme-surface {
+      background-color: #FFFDF7;
+      border-color: #E8DFC8;
+    }
+  }
+
+  .theme-card {
+    background-color: #2C1A0C;
+    border-color: #3D2410;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .theme-card {
+      background-color: #FFFDF7;
+      border-color: #E8DFC8;
+    }
+  }
+
+  .theme-text {
+    color: #F5F0E0;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .theme-text {
+      color: #2C1A0C;
+    }
+  }
+
+  .theme-muted {
+    color: #9A8070;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .theme-muted {
+      color: #7A6050;
+    }
+  }
+
+  /* Header: dark bordo bg with mustard bottom border */
+  .theme-header {
+    background-color: #1A0F08;
+    border-bottom: 2px solid #F5A623;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .theme-header {
+      background-color: #FFFDF7;
+      border-bottom: 2px solid #F5A623;
+    }
+  }
+
+  /* Category nav */
+  .theme-nav {
+    background-color: rgba(26, 15, 8, 0.97);
+    border-bottom: 1px solid #3D2410;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .theme-nav {
+      background-color: rgba(245, 240, 224, 0.97);
+      border-bottom: 1px solid #E8DFC8;
+    }
+  }
+
+  /* Inactive nav pill */
+  .theme-pill-inactive {
+    background-color: #3D2410;
+    color: #9A8070;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .theme-pill-inactive {
+      background-color: #EDE5CC;
+      color: #7A6050;
+    }
+  }
+
+  /* Inputs */
+  .theme-input {
+    background-color: #2C1A0C;
+    border-color: #3D2410;
+    color: #F5F0E0;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .theme-input {
+      background-color: #F5F0E0;
+      border-color: #D8CDB0;
+      color: #2C1A0C;
+    }
+  }
+
+  /* Modal */
+  .theme-modal {
+    background-color: #241408;
+    border-color: #3D2410;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .theme-modal {
+      background-color: #FFFDF7;
+      border-color: #E8DFC8;
+    }
+  }
+
+  .theme-modal-section {
+    background-color: #2C1A0C;
+    border-color: #3D2410;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .theme-modal-section {
+      background-color: #F5F0E0;
+      border-color: #E8DFC8;
+    }
+  }
+
+  .theme-modal-footer {
+    background-color: #241408;
+    border-top: 1px solid #3D2410;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .theme-modal-footer {
+      background-color: #FFFDF7;
+      border-top: 1px solid #E8DFC8;
+    }
+  }
+
+  .theme-close-btn {
+    background-color: #3D2410;
+    color: #9A8070;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .theme-close-btn {
+      background-color: #EDE5CC;
+      color: #7A6050;
+    }
+  }
+
+  .theme-divider {
+    border-color: #3D2410;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .theme-divider {
+      border-color: #E8DFC8;
+    }
+  }
+}

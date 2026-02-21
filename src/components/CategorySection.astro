@@ -1,0 +1,47 @@
+---
+import ProductCard from './ProductCard.astro';
+
+export interface Props {
+  id: string;
+  category: string;
+  emoji: string;
+  products: Array<{
+    id: string;
+    nombre: string;
+    descripcion: string;
+    precio: number;
+    imagen: string;
+    badge?: string | null;
+  }>;
+}
+
+const { id, category, products } = Astro.props;
+---
+
+<section id={id} class="mb-8">
+  <!-- Category header -->
+  <div class="flex items-center gap-3 mb-3 px-4">
+    <!-- Celeste Argentina accent bar -->
+    <div class="w-1 h-6 rounded-full flex-shrink-0" style="background: linear-gradient(to bottom, #75AADB, #4A8CC0);"></div>
+    <h2 class="theme-text text-base font-black tracking-tight flex-1">
+      {category}
+    </h2>
+    <span class="text-xs font-bold px-2 py-0.5 rounded-full theme-close-btn theme-muted">
+      {products.length}
+    </span>
+  </div>
+
+  <!-- Single-column compact list -->
+  <div class="flex flex-col gap-2.5 px-4">
+    {products.map((product) => (
+      <ProductCard
+        id={product.id}
+        nombre={product.nombre}
+        descripcion={product.descripcion}
+        precio={product.precio}
+        imagen={product.imagen}
+        badge={product.badge}
+      />
+    ))}
+  </div>
+</section>

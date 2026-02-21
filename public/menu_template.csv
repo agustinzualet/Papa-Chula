@@ -1,0 +1,9 @@
+id,categoria,nombre,descripcion,precio,imagen,disponible
+nov-rompe-corazones,Novedades,Rompe Corazones,"Medallón casero, lechuga, tomate, doble provoleta, morrón, huevo, panceta, BBQ.",7000,,TRUE
+nov-natalia,Novedades,Natalia Natalia,"Medallón casero, lechuga, tomate, doble cheddar, bondiola, rúcula.",6900,,TRUE
+ham-clasica-completa,Hamburguesas,Clásica Completa,"Hamburguesa casera, huevo, lechuga, tomate.",4800,,TRUE
+ham-completa-especial,Hamburguesas,Completa Especial,"Hamburguesa casera, huevo, lechuga, tomate, jamón, cheddar.",5600,,TRUE
+mil-milagrosa,Milanesas,La Milagrosa,"Super mila, huevo, lechuga, tomate, jamón, muzzarella doble, morrones, aceitunas, rúcula.",10900,,TRUE
+lom-clasico,Lomitos,Lomo Clásico,"Lomo, huevo, lechuga, tomate, rúcula.",14000,,TRUE
+piz-muzzarella,Pizzas,Muzzarella,"Pizza clásica de muzzarella.",7000,,TRUE
+guar-papas-grandes,Guarniciones,Papas Fritas Grandes,"Papas fritas crujientes, porción grande.",4400,,TRUE

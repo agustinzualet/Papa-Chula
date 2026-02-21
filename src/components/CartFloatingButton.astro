@@ -1,0 +1,491 @@
+---
+// CartFloatingButton.astro
+// TODO: Reemplazar con el número de WhatsApp del cliente (sin + ni espacios, ej: 5491112345678)
+const WHATSAPP_NUMBER = '[NUMERO_WHATSAPP]';
+
+// TODO: Reemplazar con las zonas de envío reales del cliente
+const SHIPPING_ZONES = [
+  { label: '[Zona 1]', price: 0 },
+  { label: '[Zona 2]', price: 0 },
+];
+---
+
+<div id="cart-component-root" data-whatsapp={WHATSAPP_NUMBER}>
+
+  <div
+    id="checkout-modal-overlay"
+    class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4"
+    style="background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); display: none !important;"
+    aria-modal="true"
+    role="dialog"
+    aria-labelledby="modal-title"
+  >
+    <div
+      id="checkout-modal"
+      class="relative w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl overflow-hidden flex flex-col"
+      style="background: #241408; border: 1px solid #3D2410; max-height: 92dvh;"
+    >
+      <!-- Modal header -->
+      <div class="flex items-center justify-between px-5 py-4 flex-shrink-0" style="border-bottom: 1px solid #3D2410;">
+        <div>
+          <h2 id="modal-title" class="text-lg font-black" style="color: #F5A623;">Finalizar Pedido 🛒</h2>
+          <p class="text-xs mt-0.5" style="color: #9A8070;">Completá los datos para tu pedido</p>
+        </div>
+        <button
+          id="modal-close-btn"
+          class="w-9 h-9 rounded-full flex items-center justify-center text-lg transition-all active:scale-90"
+          style="background: #3D2410; color: #9A8070;"
+          aria-label="Cerrar modal"
+        >✕</button>
+      </div>
+
+      <div class="overflow-y-auto flex-1 px-5 py-4 space-y-5">
+
+        <!-- Order summary -->
+        <div class="rounded-2xl p-4" style="background: #2C1A0C; border: 1px solid #3D2410;">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-xs font-bold uppercase tracking-wider" style="color: #9A8070;">Tu pedido</p>
+            <button
+              id="clear-cart-btn"
+              class="text-xs font-bold px-2 py-1 rounded-lg transition-all active:scale-90"
+              style="background: rgba(107,45,14,0.4); color: #F5A623; border: 1px solid #3D2410;"
+            >
+              🗑 Vaciar pedido
+            </button>
+          </div>
+          <ul id="modal-items-list" class="space-y-2 mb-3"></ul>
+          <div class="flex items-center justify-between pt-3" style="border-top: 1px solid #3D2410;">
+            <span class="text-sm font-bold" style="color: #9A8070;">Subtotal productos</span>
+            <span id="modal-subtotal" class="text-base font-bold" style="color: #F5F0E0;"></span>
+          </div>
+          <!-- Shipping cost row (only visible on delivery) -->
+          <div id="shipping-cost-row" class="flex items-center justify-between pt-2" style="display: none !important;">
+            <span class="text-sm font-bold" style="color: #75AADB;">🛵 Envío</span>
+            <span id="modal-shipping-cost" class="text-base font-bold" style="color: #75AADB;"></span>
+          </div>
+          <!-- Grand total -->
+          <div class="flex items-center justify-between pt-2 mt-1" style="border-top: 1px solid #3D2410;">
+            <span class="text-sm font-black" style="color: #F5F0E0;">Total</span>
+            <span id="modal-total" class="text-xl font-black" style="color: #F5A623;"></span>
+          </div>
+        </div>
+
+        <!-- Delivery type -->
+        <div>
+          <p class="text-sm font-bold mb-2.5" style="color: #F5F0E0;">Tipo de Entrega</p>
+          <div class="grid grid-cols-2 gap-2">
+            <button
+              id="toggle-delivery"
+              class="delivery-toggle py-3 px-4 rounded-xl font-bold text-sm transition-all duration-200 flex items-center justify-center gap-2 active:scale-95"
+              data-type="delivery"
+              style="background: #F5A623; color: #2C1A0C;"
+            >
+              🛵 Delivery
+            </button>
+            <button
+              id="toggle-retiro"
+              class="delivery-toggle py-3 px-4 rounded-xl font-bold text-sm transition-all duration-200 flex items-center justify-center gap-2 active:scale-95"
+              data-type="retiro"
+              style="background: #3D2410; color: #9A8070;"
+            >
+              🏪 Retiro en Local
+            </button>
+          </div>
+        </div>
+
+        <!-- Delivery fields -->
+        <div id="field-delivery" class="space-y-3">
+          <!-- Zone selector -->
+          <div class="space-y-1.5">
+            <label for="select-zona" class="text-sm font-bold" style="color: #F5F0E0;">
+              📍 ¿Dónde te lo llevamos?
+            </label>
+            <div class="relative">
+              <select
+                id="select-zona"
+                class="w-full px-4 py-3 rounded-xl text-sm outline-none appearance-none cursor-pointer transition-all"
+                style="background: #2C1A0C; border: 1.5px solid #3D2410; color: #F5F0E0;"
+              >
+                {SHIPPING_ZONES.map((zone) => (
+                  <option value={zone.price} data-label={zone.label}>
+                    {zone.label} — ${zone.price.toLocaleString('es-AR')}
+                  </option>
+                ))}
+              </select>
+              <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color: #F5A623;">▼</div>
+            </div>
+          </div>
+
+          <!-- Address field -->
+          <div class="space-y-1.5">
+            <label for="input-direccion" class="text-sm font-bold" style="color: #F5F0E0;">
+              🏠 Dirección completa
+            </label>
+            <input
+              id="input-direccion"
+              type="text"
+              placeholder="Ej: Av. San Martín 1234, piso 2"
+              class="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
+              style="background: #2C1A0C; border: 1.5px solid #3D2410; color: #F5F0E0;"
+            />
+          </div>
+        </div>
+
+        <!-- Pickup name -->
+        <div id="field-retiro" class="space-y-1.5 hidden">
+          <label for="input-nombre" class="text-sm font-bold" style="color: #F5F0E0;">
+            👤 Nombre de quien retira
+          </label>
+          <input
+            id="input-nombre"
+            type="text"
+            placeholder="Ej: Juan García"
+            class="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
+            style="background: #2C1A0C; border: 1.5px solid #3D2410; color: #F5F0E0;"
+          />
+        </div>
+
+        <!-- Preferences / notes -->
+        <div class="space-y-1.5">
+          <label for="input-preferencias" class="text-sm font-bold" style="color: #F5F0E0;">
+            📝 Preferencias o aclaraciones
+          </label>
+          <textarea
+            id="input-preferencias"
+            placeholder="Ej: Sin cebolla, sin pepino, extra salsa..."
+            rows="2"
+            class="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all resize-none"
+            style="background: #2C1A0C; border: 1.5px solid #3D2410; color: #F5F0E0;"
+          ></textarea>
+        </div>
+
+        <!-- Payment method -->
+        <div class="space-y-1.5">
+          <label for="select-pago" class="text-sm font-bold" style="color: #F5F0E0;">
+            💳 Método de Pago
+          </label>
+          <div class="relative">
+            <select
+              id="select-pago"
+              class="w-full px-4 py-3 rounded-xl text-sm outline-none appearance-none cursor-pointer transition-all"
+              style="background: #2C1A0C; border: 1.5px solid #3D2410; color: #F5F0E0;"
+            >
+              <option value="efectivo">💵 Efectivo</option>
+              <option value="mercadopago">📱 Mercado Pago (Alias/CVU)</option>
+              <option value="transferencia">🏦 Transferencia Bancaria</option>
+            </select>
+            <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color: #F5A623;">▼</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer: confirm button -->
+      <div class="px-5 py-4 flex-shrink-0" style="border-top: 1px solid #3D2410; background: #241408;">
+        <button
+          id="confirm-whatsapp-btn"
+          class="w-full py-4 rounded-2xl font-black text-base flex items-center justify-center gap-3 transition-all duration-200 active:scale-95"
+          style="background: linear-gradient(135deg, #25D366, #1da851); color: #fff; box-shadow: 0 4px 20px rgba(37,211,102,0.35);"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          Confirmar y Enviar a WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating cart button -->
+  <div id="cart-float" class="fixed bottom-6 right-4 z-50" style="display: none !important;">
+    <button
+      id="cart-btn"
+      class="flex items-center gap-3 px-5 py-3.5 rounded-2xl font-black text-sm shadow-2xl transition-all duration-300 active:scale-95 select-none"
+      style="background: linear-gradient(135deg, #F5A623, #C8841A); color: #2C1A0C; box-shadow: 0 8px 32px rgba(245,166,35,0.5);"
+      aria-label="Ver carrito y finalizar pedido"
+    >
+      <div class="relative">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        <span
+          id="cart-count-badge"
+          class="absolute -top-2 -right-2 w-5 h-5 rounded-full flex items-center justify-center text-xs font-black"
+          style="background: #6B2D0E; color: #F5A623;"
+        >0</span>
+      </div>
+      <div class="flex flex-col items-start leading-none">
+        <span class="text-xs font-semibold opacity-80">Tu pedido</span>
+        <span id="cart-total-display" class="text-base font-black">$0</span>
+      </div>
+    </button>
+  </div>
+
+</div>
+
+<script>
+  import { cartItems, removeFromCart, clearCart } from '../stores/cartStore.js';
+
+  const rootElement = document.getElementById('cart-component-root');
+  const WHATSAPP_NUMBER = rootElement.dataset.whatsapp;
+
+  // ---- Shipping zones (must match the Astro frontmatter data) ----
+  const SHIPPING_ZONES = [
+    { label: '[Zona 1]', price: 0 },
+    { label: '[Zona 2]', price: 0 },
+  ];
+
+  // ---- DOM refs ----
+  const cartFloat        = document.getElementById('cart-float');
+  const cartBtn          = document.getElementById('cart-btn');
+  const cartCountBadge   = document.getElementById('cart-count-badge');
+  const cartTotalDisplay = document.getElementById('cart-total-display');
+
+  const modalOverlay   = document.getElementById('checkout-modal-overlay');
+  const modalCloseBtn  = document.getElementById('modal-close-btn');
+  const modalItemsList = document.getElementById('modal-items-list');
+  const modalSubtotal  = document.getElementById('modal-subtotal');
+  const modalShipCost  = document.getElementById('modal-shipping-cost');
+  const shippingRow    = document.getElementById('shipping-cost-row');
+  const modalTotal     = document.getElementById('modal-total');
+  const confirmBtn     = document.getElementById('confirm-whatsapp-btn');
+  const clearCartBtn   = document.getElementById('clear-cart-btn');
+
+  const toggleDelivery = document.getElementById('toggle-delivery');
+  const toggleRetiro   = document.getElementById('toggle-retiro');
+  const fieldDelivery  = document.getElementById('field-delivery');
+  const fieldRetiro    = document.getElementById('field-retiro');
+  const selectZona     = document.getElementById('select-zona');
+  const inputDireccion = document.getElementById('input-direccion');
+  const inputNombre    = document.getElementById('input-nombre');
+  const inputPref      = document.getElementById('input-preferencias');
+  const selectPago     = document.getElementById('select-pago');
+
+  let currentItems = [];
+  let deliveryType = 'delivery';
+
+  // ---- Helpers ----
+  function formatPrice(amount) {
+    return new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency: 'ARS',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  }
+
+  function getShippingCost() {
+    if (deliveryType !== 'delivery') return 0;
+    return parseInt(selectZona?.value || '0', 10);
+  }
+
+  function getShippingLabel() {
+    const selectedOption = selectZona?.options[selectZona.selectedIndex];
+    return selectedOption?.dataset?.label || selectZona?.options[selectZona.selectedIndex]?.text || '';
+  }
+
+  function updateModalTotals() {
+    const subtotal = currentItems.reduce((s, i) => s + i.precio * i.qty, 0);
+    const shipping = getShippingCost();
+    const total    = subtotal + shipping;
+
+    if (modalSubtotal) modalSubtotal.textContent = formatPrice(subtotal);
+    if (modalTotal)    modalTotal.textContent    = formatPrice(total);
+
+    if (deliveryType === 'delivery') {
+      if (shippingRow)  { shippingRow.style.removeProperty('display'); shippingRow.style.display = 'flex'; }
+      if (modalShipCost) modalShipCost.textContent = formatPrice(shipping);
+    } else {
+      if (shippingRow)  shippingRow.style.display = 'none';
+    }
+  }
+
+  function renderItems() {
+    modalItemsList.innerHTML = currentItems.map(item => `
+      <li class="flex items-center gap-2" data-item-id="${item.id}">
+        <div class="flex items-center gap-1 flex-shrink-0">
+          <button class="cart-qty-btn w-6 h-6 rounded-full flex items-center justify-center font-black text-sm leading-none transition-all active:scale-90"
+            data-action="dec" data-id="${item.id}"
+            style="background:#3D2410;color:#F5A623;">−</button>
+          <span class="text-xs font-black w-5 text-center" style="color:#F5F0E0;">${item.qty}</span>
+          <button class="cart-qty-btn w-6 h-6 rounded-full flex items-center justify-center font-black text-sm leading-none transition-all active:scale-90"
+            data-action="inc" data-id="${item.id}"
+            style="background:#3D2410;color:#F5A623;">+</button>
+        </div>
+        <span class="text-sm flex-1 truncate" style="color:#F5F0E0;">${item.nombre}</span>
+        <span class="text-sm font-bold flex-shrink-0" style="color:#F5A623;">${formatPrice(item.precio * item.qty)}</span>
+        <button class="cart-remove-btn w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all active:scale-90"
+          data-id="${item.id}"
+          style="background:rgba(107,45,14,0.6);color:#F5A623;font-size:11px;">✕</button>
+      </li>
+    `).join('');
+
+    // Qty buttons
+    modalItemsList.querySelectorAll('.cart-qty-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        if (btn.dataset.action === 'dec') {
+          removeFromCart(id);
+        } else {
+          import('../stores/cartStore.js').then(({ addToCart }) => {
+            const item = currentItems.find(i => i.id === id);
+            if (item) addToCart({ id: item.id, nombre: item.nombre, precio: item.precio });
+          });
+        }
+      });
+    });
+
+    // Remove-all buttons
+    modalItemsList.querySelectorAll('.cart-remove-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const item = currentItems.find(i => i.id === id);
+        if (!item) return;
+        for (let i = 0; i < item.qty; i++) removeFromCart(id);
+      });
+    });
+  }
+
+  function openModal() {
+    const count = currentItems.reduce((s, i) => s + i.qty, 0);
+    if (count === 0) return;
+
+    renderItems();
+    updateModalTotals();
+
+    modalOverlay.style.removeProperty('display');
+    modalOverlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modalOverlay.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  // ---- Delivery toggle ----
+  function setDeliveryType(type) {
+    deliveryType = type;
+    if (type === 'delivery') {
+      toggleDelivery.style.background = '#F5A623';
+      toggleDelivery.style.color      = '#2C1A0C';
+      toggleRetiro.style.background   = '#3D2410';
+      toggleRetiro.style.color        = '#9A8070';
+      fieldDelivery.classList.remove('hidden');
+      fieldRetiro.classList.add('hidden');
+    } else {
+      toggleRetiro.style.background   = '#F5A623';
+      toggleRetiro.style.color        = '#2C1A0C';
+      toggleDelivery.style.background = '#3D2410';
+      toggleDelivery.style.color      = '#9A8070';
+      fieldRetiro.classList.remove('hidden');
+      fieldDelivery.classList.add('hidden');
+    }
+    updateModalTotals();
+  }
+
+  toggleDelivery?.addEventListener('click', () => setDeliveryType('delivery'));
+  toggleRetiro?.addEventListener('click',   () => setDeliveryType('retiro'));
+
+  // Recalculate when zone changes
+  selectZona?.addEventListener('change', updateModalTotals);
+
+  // Focus styles for inputs
+  [inputDireccion, inputNombre, inputPref].forEach(input => {
+    if (!input) return;
+    input.addEventListener('focus', () => { input.style.borderColor = '#F5A623'; });
+    input.addEventListener('blur',  () => { input.style.borderColor = '#3D2410'; });
+  });
+  [selectPago, selectZona].forEach(sel => {
+    if (!sel) return;
+    sel.addEventListener('focus', () => { sel.style.borderColor = '#F5A623'; });
+    sel.addEventListener('blur',  () => { sel.style.borderColor = '#3D2410'; });
+  });
+
+  // ---- WhatsApp message builder ----
+  function buildWhatsAppMessage(items) {
+    const subtotal = items.reduce((s, i) => s + i.precio * i.qty, 0);
+    const shipping = getShippingCost();
+    const total    = subtotal + shipping;
+    const lines    = items.map(i => `  • ${i.qty}x ${i.nombre} (${formatPrice(i.precio * i.qty)})`).join('\n');
+
+    const pagoLabels = {
+      efectivo:       '💵 Efectivo',
+      mercadopago:    '📱 Mercado Pago (Alias/CVU)',
+      transferencia:  '🏦 Transferencia Bancaria',
+    };
+    const pagoLabel = pagoLabels[selectPago?.value] || 'Efectivo';
+
+    let entregaLine = '';
+    if (deliveryType === 'delivery') {
+      const zona  = getShippingLabel();
+      const dir   = inputDireccion?.value?.trim() || '(sin especificar)';
+      entregaLine = `🛵 *Entrega:* Delivery\n📍 *Dirección:* ${dir}\n🗺️ *Zona:* ${zona} (${formatPrice(shipping)})`;
+    } else {
+      const nombre = inputNombre?.value?.trim() || '(sin especificar)';
+      entregaLine  = `🏪 *Entrega:* Retiro en Local\n👤 *Nombre:* ${nombre}`;
+    }
+
+    const shippingLine = deliveryType === 'delivery'
+      ? `\n💰 *Subtotal productos:* ${formatPrice(subtotal)}\n🛵 *Envío:* ${formatPrice(shipping)}`
+      : '';
+
+    const prefText = inputPref?.value?.trim();
+    const prefLine = prefText ? `\n\n📝 *Preferencias:* ${prefText}` : '';
+
+    // TODO: Reemplazar [NOMBRE LOCAL] con el nombre real del comercio
+    return `¡Hola [NOMBRE LOCAL]! 🍔\n\n${entregaLine}\n💳 *Pago:* ${pagoLabel}\n\n📋 *Detalle del pedido:*\n${lines}${shippingLine}${prefLine}\n\n*Total: ${formatPrice(total)}*\n\n¿Podés confirmarme disponibilidad? ¡Gracias!`;
+  }
+
+  // ---- Cart store subscription ----
+  cartItems.subscribe((items) => {
+    currentItems = items;
+    const count = items.reduce((s, i) => s + i.qty, 0);
+    const total = items.reduce((s, i) => s + i.precio * i.qty, 0);
+
+    if (count > 0) {
+      cartFloat.style.removeProperty('display');
+      cartFloat.style.display = 'block';
+    } else {
+      cartFloat.style.display = 'none';
+      closeModal();
+    }
+
+    cartCountBadge.textContent   = count;
+    cartTotalDisplay.textContent = formatPrice(total);
+
+    // If modal is open, re-render items live
+    const isOpen = modalOverlay.style.display === 'flex';
+    if (isOpen) {
+      renderItems();
+      updateModalTotals();
+    }
+  });
+
+  // ---- Events ----
+  cartBtn?.addEventListener('click', openModal);
+  modalCloseBtn?.addEventListener('click', closeModal);
+
+  modalOverlay?.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  confirmBtn?.addEventListener('click', () => {
+    if (currentItems.length === 0) return;
+    const message = buildWhatsAppMessage(currentItems);
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+    closeModal();
+  });
+
+  clearCartBtn?.addEventListener('click', () => {
+    if (confirm('¿Vaciar el pedido actual?')) {
+      clearCart();
+    }
+  });
+</script>

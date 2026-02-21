@@ -1,0 +1,111 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import CategorySection from '../components/CategorySection.astro';
+import CartFloatingButton from '../components/CartFloatingButton.astro';
+import { getMenuData } from '../lib/googleSheets';
+
+const menuData = await getMenuData();
+---
+
+<Layout>
+  <Header />
+
+  <!-- Category navigation pills -->
+  <nav
+    class="theme-nav sticky top-[72px] z-40 py-2.5 overflow-x-auto"
+    style="backdrop-filter: blur(12px);"
+  >
+    <div class="flex gap-2 px-4 w-max min-w-full">
+      {menuData.map((cat) => (
+        <a
+          href={`#${cat.id}`}
+          class="flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 whitespace-nowrap theme-pill-inactive"
+          data-nav-pill={cat.id}
+        >
+          {cat.emoji} {cat.category.split(' ').slice(1).join(' ')}
+        </a>
+      ))}
+    </div>
+  </nav>
+
+  <!-- Hero banner -->
+  <div
+    class="relative overflow-hidden mx-4 mt-4 mb-5 rounded-2xl p-5"
+    style="background: linear-gradient(135deg, var(--color-brand-bordo) 0%, var(--color-brand-bordo-dark) 50%, var(--color-dark-card) 100%); border: 1px solid rgba(245,166,35,0.3);"
+  >
+    <div class="relative z-10">
+      <div class="flex items-center gap-2 mb-1">
+        <div class="w-3 h-0.5 rounded-full" style="background: var(--color-brand-celeste);"></div>
+        <p class="text-xs font-black uppercase tracking-widest" style="color: var(--color-brand-mustard);">🍽️ Menú Digital</p>
+      </div>
+      <h1 class="text-2xl font-black leading-tight mb-1.5" style="color: var(--color-dark-text);">
+        <!-- TODO: Reemplazar con el mensaje de bienvenida del cliente -->
+        ¡Bienvenido a<br/>
+        <span style="color: var(--color-brand-mustard);">[NOMBRE LOCAL]!</span>
+      </h1>
+      <p class="text-xs" style="color: rgba(245,240,224,0.65);">
+        Elegí, armá tu pedido y enviálo por WhatsApp 🚀
+      </p>
+    </div>
+    <!-- Decorative circles using brand palette -->
+    <div class="absolute -right-6 -top-6 w-28 h-28 rounded-full opacity-20" style="background: var(--color-brand-mustard);"></div>
+    <div class="absolute right-8 -bottom-8 w-20 h-20 rounded-full opacity-10" style="background: var(--color-brand-celeste);"></div>
+  </div>
+
+  <!-- Menu categories -->
+  <main class="pb-32 max-w-4xl mx-auto">
+    {menuData.map((category) => (
+      <CategorySection
+        id={category.id}
+        category={category.category}
+        emoji={category.emoji}
+        products={category.products}
+      />
+    ))}
+  </main>
+
+  <CartFloatingButton />
+</Layout>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const pills = document.querySelectorAll('[data-nav-pill]');
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  const activeStyle = { bg: '#F5A623', color: '#2C1A0C' };
+  const inactiveStyleDark = { bg: '#3D2410', color: '#9A8070' };
+  const inactiveStyleLight = { bg: '#EDE5CC', color: '#7A6050' };
+
+  function setActivePill(id: string) {
+    pills.forEach((pill) => {
+      const el = pill as HTMLElement;
+      const inactive = isDark ? inactiveStyleDark : inactiveStyleLight;
+      if (el.dataset.navPill === id) {
+        el.style.background = activeStyle.bg;
+        el.style.color = activeStyle.color;
+      } else {
+        el.style.background = inactive.bg;
+        el.style.color = inactive.color;
+      }
+    });
+  }
+
+  // Set first pill active by default
+  if (pills.length > 0) {
+    const firstPill = pills[0] as HTMLElement;
+    firstPill.style.background = '#F5A623';
+    firstPill.style.color = '#2C1A0C';
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) setActivePill(entry.target.id);
+      });
+    },
+    { rootMargin: '-20% 0px -60% 0px' }
+  );
+
+  sections.forEach((section) => observer.observe(section));
+</script>

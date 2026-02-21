@@ -1,0 +1,17 @@
+[
+  {
+    "id": "ejemplo",
+    "category": "🍽️ [Categoría Ejemplo]",
+    "emoji": "🍽️",
+    "products": [
+      {
+        "id": "ejemplo-producto-1",
+        "nombre": "[Nombre del Producto]",
+        "descripcion": "[Descripción del producto. Ingredientes, opciones, etc.]",
+        "precio": 0,
+        "imagen": null,
+        "badge": null
+      }
+    ]
+  }
+]

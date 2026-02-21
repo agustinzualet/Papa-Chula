@@ -1,0 +1,143 @@
+---
+export interface Props {
+  id: string;
+  nombre: string;
+  descripcion: string;
+  precio: number;
+  imagen: string | null;
+  badge?: string | null;
+}
+
+const { id, nombre, descripcion, precio, imagen, badge } = Astro.props;
+
+const hasImage = imagen && imagen !== 'null';
+
+const precioFormateado = new Intl.NumberFormat('es-AR', {
+  style: 'currency',
+  currency: 'ARS',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+}).format(precio);
+
+// Badge colors using Burga palette
+const badgeColors: Record<string, { bg: string; text: string }> = {
+  'Nuevo':       { bg: '#75AADB', text: '#fff' },      // celeste argentina
+  'Oferta':      { bg: '#6B2D0E', text: '#F5A623' },   // bordo + mustard text
+  'XXL Gigante': { bg: '#6B2D0E', text: '#F5F0E0' },
+  'XXL':         { bg: '#6B2D0E', text: '#F5F0E0' },
+  'Gigante':     { bg: '#6B2D0E', text: '#F5F0E0' },
+  'Especial':    { bg: '#F5A623', text: '#2C1A0C' },   // mustard
+  'Económica':   { bg: '#75AADB', text: '#fff' },
+};
+const badgeStyle = badge && badgeColors[badge] ? badgeColors[badge] : { bg: '#F5A623', text: '#2C1A0C' };
+---
+
+<!-- Compact horizontal list card -->
+<article
+  class="product-card theme-card group relative flex flex-row items-start gap-3 rounded-xl overflow-hidden border transition-all duration-200"
+  data-product-id={id}
+  data-product-nombre={nombre}
+  data-product-precio={precio}
+  style="padding: 10px; box-shadow: 0 2px 12px rgba(107,45,14,0.18);"
+>
+  {hasImage && (
+    <!-- LEFT: Square image (only when image exists) -->
+    <div class="relative flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden">
+      <img
+        src={imagen}
+        alt={nombre}
+        class="w-full h-full object-cover transition-transform duration-400 group-hover:scale-105"
+        loading="lazy"
+        decoding="async"
+        onerror="this.src='https://placehold.co/200x200/2C1A0C/F5A623?text=BURGA'"
+      />
+      <!-- Badge overlay on image -->
+      {badge && (
+        <div
+          class="absolute top-1 left-1 px-1.5 py-0.5 rounded text-xs font-black uppercase leading-none"
+          style={`background: ${badgeStyle.bg}; color: ${badgeStyle.text}; font-size: 9px; letter-spacing: 0.03em;`}
+        >
+          {badge}
+        </div>
+      )}
+    </div>
+  )}
+
+  <!-- RIGHT: Info -->
+  <div class="flex-1 min-w-0 flex flex-col justify-between" style="min-height: 72px;">
+    <!-- Top: name + optional inline badge + description -->
+    <div>
+      <div class="flex items-center gap-2 flex-wrap">
+        <h3 class="theme-text font-bold text-sm leading-tight">
+          {nombre}
+        </h3>
+        <!-- Inline badge when no image -->
+        {!hasImage && badge && (
+          <span
+            class="px-1.5 py-0.5 rounded text-xs font-black uppercase leading-none flex-shrink-0"
+            style={`background: ${badgeStyle.bg}; color: ${badgeStyle.text}; font-size: 9px; letter-spacing: 0.03em;`}
+          >
+            {badge}
+          </span>
+        )}
+      </div>
+      <p class="theme-muted text-xs leading-snug mt-0.5" style="display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;">
+        {descripcion}
+      </p>
+    </div>
+
+    <!-- Bottom: price + add button -->
+    <div class="flex items-center justify-between mt-2">
+      <span class="font-black text-base" style="color: #F5A623;">
+        {precioFormateado}
+      </span>
+      <button
+        class="add-to-cart-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold text-xs transition-all duration-150 active:scale-90 select-none"
+        data-product-id={id}
+        data-product-nombre={nombre}
+        data-product-precio={precio}
+        style="background: linear-gradient(135deg, #F5A623, #C8841A); color: #2C1A0C; box-shadow: 0 2px 8px rgba(245,166,35,0.35);"
+        aria-label={`Agregar ${nombre} al carrito`}
+      >
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Agregar
+      </button>
+    </div>
+  </div>
+
+  <!-- Added feedback flash -->
+  <div
+    class="added-feedback absolute inset-0 flex items-center justify-center rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
+    style="background: rgba(245,166,35,0.10); border: 2px solid #F5A623;"
+  >
+    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full" style="background: #F5A623;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2C1A0C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      <span class="text-xs font-black" style="color: #2C1A0C;">¡Listo!</span>
+    </div>
+  </div>
+</article>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.add-to-cart-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.productId!;
+      const nombre = btn.dataset.productNombre!;
+      const precio = Number(btn.dataset.productPrecio!);
+
+      import('../stores/cartStore.js').then(({ addToCart }) => {
+        addToCart({ id, nombre, precio });
+      });
+
+      const card = btn.closest('.product-card') as HTMLElement;
+      const feedback = card?.querySelector('.added-feedback') as HTMLElement;
+      if (feedback) {
+        feedback.style.opacity = '1';
+        setTimeout(() => { feedback.style.opacity = '0'; }, 600);
+      }
+    });
+  });
+</script>
