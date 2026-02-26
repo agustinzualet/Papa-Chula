@@ -23,18 +23,18 @@ const SHIPPING_ZONES = [
     <div
       id="checkout-modal"
       class="relative w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl overflow-hidden flex flex-col"
-      style="background: #241408; border: 1px solid #3D2410; max-height: 92dvh;"
+      style="background: #1A1A1A; border: 3px solid #1A1A1A; max-height: 92dvh;"
     >
       <!-- Modal header -->
-      <div class="flex items-center justify-between px-5 py-4 flex-shrink-0" style="border-bottom: 1px solid #3D2410;">
+      <div class="flex items-center justify-between px-5 py-4 flex-shrink-0" style="border-bottom: 3px solid #FFC520; background: #111111;">
         <div>
-          <h2 id="modal-title" class="text-lg font-black" style="color: #F5A623;">Finalizar Pedido 🛒</h2>
-          <p class="text-xs mt-0.5" style="color: #9A8070;">Completá los datos para tu pedido</p>
+          <h2 id="modal-title" class="font-black uppercase tracking-wide" style="color: #FFC520; font-family: 'Bangers', cursive; font-size: 1.6rem;">Finalizar Pedido 🤙</h2>
+          <p class="text-xs mt-0.5" style="color: #AAAAAA; font-family: 'Nunito', sans-serif;">Completá los datos para tu pedido</p>
         </div>
         <button
           id="modal-close-btn"
-          class="w-9 h-9 rounded-full flex items-center justify-center text-lg transition-all active:scale-90"
-          style="background: #3D2410; color: #9A8070;"
+          class="w-9 h-9 rounded-lg flex items-center justify-center text-lg font-black transition-all active:scale-90 border-2 border-[#444]"
+          style="background: #333333; color: #AAAAAA; box-shadow: 2px 2px 0px #000;"
           aria-label="Cerrar modal"
         >✕</button>
       </div>
@@ -42,51 +42,51 @@ const SHIPPING_ZONES = [
       <div class="overflow-y-auto flex-1 px-5 py-4 space-y-5">
 
         <!-- Order summary -->
-        <div class="rounded-2xl p-4" style="background: #2C1A0C; border: 1px solid #3D2410;">
+        <div class="rounded-xl p-4" style="background: #222222; border: 2px solid #333333;">
           <div class="flex items-center justify-between mb-3">
-            <p class="text-xs font-bold uppercase tracking-wider" style="color: #9A8070;">Tu pedido</p>
+            <p class="text-xs font-black uppercase tracking-wider" style="color: #AAAAAA; font-family: 'Nunito', sans-serif;">Tu pedido</p>
             <button
               id="clear-cart-btn"
-              class="text-xs font-bold px-2 py-1 rounded-lg transition-all active:scale-90"
-              style="background: rgba(107,45,14,0.4); color: #F5A623; border: 1px solid #3D2410;"
+              class="text-xs font-black px-2 py-1 rounded-lg transition-all active:scale-90 border-2 border-[#444]"
+              style="background: #333; color: #E52521; font-family: 'Nunito', sans-serif; box-shadow: 2px 2px 0px #000;"
             >
               🗑 Vaciar pedido
             </button>
           </div>
           <ul id="modal-items-list" class="space-y-2 mb-3"></ul>
-          <div class="flex items-center justify-between pt-3" style="border-top: 1px solid #3D2410;">
-            <span class="text-sm font-bold" style="color: #9A8070;">Subtotal productos</span>
-            <span id="modal-subtotal" class="text-base font-bold" style="color: #F5F0E0;"></span>
+          <div class="flex items-center justify-between pt-3" style="border-top: 2px solid #333333;">
+            <span class="text-sm font-bold" style="color: #AAAAAA; font-family: 'Nunito', sans-serif;">Subtotal productos</span>
+            <span id="modal-subtotal" class="text-base font-bold" style="color: #FDFDFD;"></span>
           </div>
           <!-- Shipping cost row (only visible on delivery) -->
           <div id="shipping-cost-row" class="flex items-center justify-between pt-2" style="display: none !important;">
-            <span class="text-sm font-bold" style="color: #75AADB;">🛵 Envío</span>
-            <span id="modal-shipping-cost" class="text-base font-bold" style="color: #75AADB;"></span>
+            <span class="text-sm font-bold" style="color: #FFC520;">🛵 Envío</span>
+            <span id="modal-shipping-cost" class="text-base font-bold" style="color: #FFC520;"></span>
           </div>
           <!-- Grand total -->
-          <div class="flex items-center justify-between pt-2 mt-1" style="border-top: 1px solid #3D2410;">
-            <span class="text-sm font-black" style="color: #F5F0E0;">Total</span>
-            <span id="modal-total" class="text-xl font-black" style="color: #F5A623;"></span>
+          <div class="flex items-center justify-between pt-2 mt-1" style="border-top: 2px solid #333333;">
+            <span class="text-sm font-black" style="color: #FDFDFD; font-family: 'Nunito', sans-serif;">Total</span>
+            <span id="modal-total" class="font-black" style="color: #FFC520; font-family: 'Bangers', cursive; font-size: 1.75rem;"></span>
           </div>
         </div>
 
         <!-- Delivery type -->
         <div>
-          <p class="text-sm font-bold mb-2.5" style="color: #F5F0E0;">Tipo de Entrega</p>
+          <p class="text-sm font-black mb-2.5 uppercase tracking-wide" style="color: #FDFDFD; font-family: 'Nunito', sans-serif;">Tipo de Entrega</p>
           <div class="grid grid-cols-2 gap-2">
             <button
               id="toggle-delivery"
-              class="delivery-toggle py-3 px-4 rounded-xl font-bold text-sm transition-all duration-200 flex items-center justify-center gap-2 active:scale-95"
+              class="delivery-toggle py-3 px-4 rounded-xl font-black text-sm transition-all duration-200 flex items-center justify-center gap-2 active:scale-95 border-2 border-[#1A1A1A]"
               data-type="delivery"
-              style="background: #F5A623; color: #2C1A0C;"
+              style="background: #FFC520; color: #1A1A1A; box-shadow: 3px 3px 0px #000;"
             >
               🛵 Delivery
             </button>
             <button
               id="toggle-retiro"
-              class="delivery-toggle py-3 px-4 rounded-xl font-bold text-sm transition-all duration-200 flex items-center justify-center gap-2 active:scale-95"
+              class="delivery-toggle py-3 px-4 rounded-xl font-black text-sm transition-all duration-200 flex items-center justify-center gap-2 active:scale-95 border-2 border-[#444]"
               data-type="retiro"
-              style="background: #3D2410; color: #9A8070;"
+              style="background: #333; color: #AAAAAA;"
             >
               🏪 Retiro en Local
             </button>
@@ -97,14 +97,14 @@ const SHIPPING_ZONES = [
         <div id="field-delivery" class="space-y-3">
           <!-- Zone selector -->
           <div class="space-y-1.5">
-            <label for="select-zona" class="text-sm font-bold" style="color: #F5F0E0;">
+            <label for="select-zona" class="text-sm font-bold" style="color: #FDFDFD; font-family: 'Nunito', sans-serif;">
               📍 ¿Dónde te lo llevamos?
             </label>
             <div class="relative">
               <select
                 id="select-zona"
                 class="w-full px-4 py-3 rounded-xl text-sm outline-none appearance-none cursor-pointer transition-all"
-                style="background: #2C1A0C; border: 1.5px solid #3D2410; color: #F5F0E0;"
+                style="background: #222; border: 2px solid #444; color: #FDFDFD;"
               >
                 {SHIPPING_ZONES.map((zone) => (
                   <option value={zone.price} data-label={zone.label}>
@@ -112,13 +112,13 @@ const SHIPPING_ZONES = [
                   </option>
                 ))}
               </select>
-              <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color: #F5A623;">▼</div>
+              <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color: #FFC520;">▼</div>
             </div>
           </div>
 
           <!-- Address field -->
           <div class="space-y-1.5">
-            <label for="input-direccion" class="text-sm font-bold" style="color: #F5F0E0;">
+            <label for="input-direccion" class="text-sm font-bold" style="color: #FDFDFD; font-family: 'Nunito', sans-serif;">
               🏠 Dirección completa
             </label>
             <input
@@ -126,14 +126,14 @@ const SHIPPING_ZONES = [
               type="text"
               placeholder="Ej: Av. San Martín 1234, piso 2"
               class="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
-              style="background: #2C1A0C; border: 1.5px solid #3D2410; color: #F5F0E0;"
+              style="background: #222; border: 2px solid #444; color: #FDFDFD;"
             />
           </div>
         </div>
 
         <!-- Pickup name -->
         <div id="field-retiro" class="space-y-1.5 hidden">
-          <label for="input-nombre" class="text-sm font-bold" style="color: #F5F0E0;">
+          <label for="input-nombre" class="text-sm font-bold" style="color: #FDFDFD; font-family: 'Nunito', sans-serif;">
             👤 Nombre de quien retira
           </label>
           <input
@@ -141,13 +141,13 @@ const SHIPPING_ZONES = [
             type="text"
             placeholder="Ej: Juan García"
             class="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
-            style="background: #2C1A0C; border: 1.5px solid #3D2410; color: #F5F0E0;"
+            style="background: #222; border: 2px solid #444; color: #FDFDFD;"
           />
         </div>
 
         <!-- Preferences / notes -->
         <div class="space-y-1.5">
-          <label for="input-preferencias" class="text-sm font-bold" style="color: #F5F0E0;">
+          <label for="input-preferencias" class="text-sm font-bold" style="color: #FDFDFD; font-family: 'Nunito', sans-serif;">
             📝 Preferencias o aclaraciones
           </label>
           <textarea
@@ -155,37 +155,37 @@ const SHIPPING_ZONES = [
             placeholder="Ej: Sin cebolla, sin pepino, extra salsa..."
             rows="2"
             class="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all resize-none"
-            style="background: #2C1A0C; border: 1.5px solid #3D2410; color: #F5F0E0;"
+            style="background: #222; border: 2px solid #444; color: #FDFDFD;"
           ></textarea>
         </div>
 
         <!-- Payment method -->
         <div class="space-y-1.5">
-          <label for="select-pago" class="text-sm font-bold" style="color: #F5F0E0;">
+          <label for="select-pago" class="text-sm font-bold" style="color: #FDFDFD; font-family: 'Nunito', sans-serif;">
             💳 Método de Pago
           </label>
           <div class="relative">
             <select
               id="select-pago"
               class="w-full px-4 py-3 rounded-xl text-sm outline-none appearance-none cursor-pointer transition-all"
-              style="background: #2C1A0C; border: 1.5px solid #3D2410; color: #F5F0E0;"
+              style="background: #222; border: 2px solid #444; color: #FDFDFD;"
             >
               <option value="efectivo">💵 Efectivo</option>
               <option value="mercadopago">📱 Mercado Pago (Alias/CVU)</option>
               <option value="transferencia">🏦 Transferencia Bancaria</option>
             </select>
-            <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color: #F5A623;">▼</div>
+            <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color: #FFC520;">▼</div>
           </div>
         </div>
 
       </div>
 
       <!-- Footer: confirm button -->
-      <div class="px-5 py-4 flex-shrink-0" style="border-top: 1px solid #3D2410; background: #241408;">
+      <div class="px-5 py-4 flex-shrink-0" style="border-top: 3px solid #FFC520; background: #1A1A1A;">
         <button
           id="confirm-whatsapp-btn"
-          class="w-full py-4 rounded-2xl font-black text-base flex items-center justify-center gap-3 transition-all duration-200 active:scale-95"
-          style="background: linear-gradient(135deg, #25D366, #1da851); color: #fff; box-shadow: 0 4px 20px rgba(37,211,102,0.35);"
+          class="w-full py-4 rounded-xl font-black text-base flex items-center justify-center gap-3 transition-all duration-200 active:scale-95 border-[3px] border-[#1A1A1A] uppercase tracking-wide"
+          style="background: #25D366; color: #fff; box-shadow: 4px 4px 0px #000000; font-family: 'Nunito', sans-serif;"
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
@@ -196,12 +196,12 @@ const SHIPPING_ZONES = [
     </div>
   </div>
 
-  <!-- Floating cart button -->
+  <!-- Floating cart button — Mostaza con sombra negra sólida -->
   <div id="cart-float" class="fixed bottom-6 right-4 z-50" style="display: none !important;">
     <button
       id="cart-btn"
-      class="flex items-center gap-3 px-5 py-3.5 rounded-2xl font-black text-sm shadow-2xl transition-all duration-300 active:scale-95 select-none"
-      style="background: linear-gradient(135deg, #F5A623, #C8841A); color: #2C1A0C; box-shadow: 0 8px 32px rgba(245,166,35,0.5);"
+      class="flex items-center gap-3 px-5 py-3.5 rounded-xl font-black text-sm transition-all duration-300 active:scale-95 select-none border-[3px] border-[#1A1A1A]"
+      style="background: #FFC520; color: #1A1A1A; box-shadow: 5px 5px 0px #1A1A1A;"
       aria-label="Ver carrito y finalizar pedido"
     >
       <div class="relative">
@@ -211,13 +211,13 @@ const SHIPPING_ZONES = [
         </svg>
         <span
           id="cart-count-badge"
-          class="absolute -top-2 -right-2 w-5 h-5 rounded-full flex items-center justify-center text-xs font-black"
-          style="background: #6B2D0E; color: #F5A623;"
+          class="absolute -top-2 -right-2 w-5 h-5 rounded-full flex items-center justify-center text-xs font-black border-2 border-[#1A1A1A]"
+          style="background: #E52521; color: #FDFDFD;"
         >0</span>
       </div>
       <div class="flex flex-col items-start leading-none">
-        <span class="text-xs font-semibold opacity-80">Tu pedido</span>
-        <span id="cart-total-display" class="text-base font-black">$0</span>
+        <span class="text-xs font-semibold opacity-80" style="font-family: 'Nunito', sans-serif;">Tu pedido</span>
+        <span id="cart-total-display" class="text-base font-black" style="font-family: 'Bangers', cursive; font-size: 1.2rem;">$0</span>
       </div>
     </button>
   </div>

@@ -7,8 +7,8 @@ export interface Props {
 }
 
 const {
-  title = '[NOMBRE LOCAL] — Menú Digital',
-  description = 'Menú digital. Pedí por WhatsApp.',
+  title = 'Papa Chula — Menú Digital',
+  description = 'Fritas, toppings y combos. Elegí tu combo y pedílo por WhatsApp.',
 } = Astro.props;
 ---
 
@@ -22,7 +22,7 @@ const {
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="[NOMBRE LOCAL]" />
+    <meta name="apple-mobile-web-app-title" content="Papa Chula" />
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
@@ -35,17 +35,17 @@ const {
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <!-- Google Fonts: Inter -->
+    <!-- Google Fonts: Bangers (display) + Nunito (body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
 
     <title>{title}</title>
   </head>
-  <body class="bg-brand-dark text-brand-text font-sans antialiased">
+  <body class="bg-brand-dark text-brand-text font-sans antialiased" style="isolation: isolate;">
     <slot />
   </body>
 </html>

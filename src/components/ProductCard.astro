@@ -19,26 +19,26 @@ const precioFormateado = new Intl.NumberFormat('es-AR', {
   maximumFractionDigits: 0,
 }).format(precio);
 
-// Badge colors using Burga palette
+// Badge colors — Papa Chula palette
 const badgeColors: Record<string, { bg: string; text: string }> = {
-  'Nuevo':       { bg: '#75AADB', text: '#fff' },      // celeste argentina
-  'Oferta':      { bg: '#6B2D0E', text: '#F5A623' },   // bordo + mustard text
-  'XXL Gigante': { bg: '#6B2D0E', text: '#F5F0E0' },
-  'XXL':         { bg: '#6B2D0E', text: '#F5F0E0' },
-  'Gigante':     { bg: '#6B2D0E', text: '#F5F0E0' },
-  'Especial':    { bg: '#F5A623', text: '#2C1A0C' },   // mustard
-  'Económica':   { bg: '#75AADB', text: '#fff' },
+  'Nuevo':       { bg: '#FFC520', text: '#1A1A1A' },
+  'Oferta':      { bg: '#E52521', text: '#FDFDFD' },
+  'XXL Gigante': { bg: '#1A1A1A', text: '#FFC520' },
+  'XXL':         { bg: '#1A1A1A', text: '#FFC520' },
+  'Gigante':     { bg: '#1A1A1A', text: '#FFC520' },
+  'Especial':    { bg: '#FFC520', text: '#1A1A1A' },
+  'Económica':   { bg: '#FDFDFD', text: '#1A1A1A' },
 };
-const badgeStyle = badge && badgeColors[badge] ? badgeColors[badge] : { bg: '#F5A623', text: '#2C1A0C' };
+const badgeStyle = badge && badgeColors[badge] ? badgeColors[badge] : { bg: '#FFC520', text: '#1A1A1A' };
 ---
 
 <!-- Compact horizontal list card -->
 <article
-  class="product-card theme-card group relative flex flex-row items-start gap-3 rounded-xl overflow-hidden border transition-all duration-200"
+  class="product-card theme-card group relative flex flex-row items-start gap-3 rounded-xl overflow-hidden border-[3px] border-[#1A1A1A] transition-all duration-200"
   data-product-id={id}
   data-product-nombre={nombre}
   data-product-precio={precio}
-  style="padding: 10px; box-shadow: 0 2px 12px rgba(107,45,14,0.18);"
+  style="padding: 10px; background: #FDFDFD; box-shadow: 4px 4px 0px #1A1A1A;"
 >
   {hasImage && (
     <!-- LEFT: Square image (only when image exists) -->
@@ -49,7 +49,7 @@ const badgeStyle = badge && badgeColors[badge] ? badgeColors[badge] : { bg: '#F5
         class="w-full h-full object-cover transition-transform duration-400 group-hover:scale-105"
         loading="lazy"
         decoding="async"
-        onerror="this.src='https://placehold.co/200x200/2C1A0C/F5A623?text=BURGA'"
+        onerror="this.style.display='none'"
       />
       <!-- Badge overlay on image -->
       {badge && (
@@ -88,15 +88,15 @@ const badgeStyle = badge && badgeColors[badge] ? badgeColors[badge] : { bg: '#F5
 
     <!-- Bottom: price + add button -->
     <div class="flex items-center justify-between mt-2">
-      <span class="font-black text-base" style="color: #F5A623;">
+      <span class="font-black text-lg" style="color: #1A1A1A; font-family: 'Bangers', cursive; letter-spacing: 0.03em;">
         {precioFormateado}
       </span>
       <button
-        class="add-to-cart-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold text-xs transition-all duration-150 active:scale-90 select-none"
+        class="add-to-cart-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-black text-xs transition-all duration-150 active:scale-90 select-none border-2 border-[#1A1A1A]"
         data-product-id={id}
         data-product-nombre={nombre}
         data-product-precio={precio}
-        style="background: linear-gradient(135deg, #F5A623, #C8841A); color: #2C1A0C; box-shadow: 0 2px 8px rgba(245,166,35,0.35);"
+        style="background: #FFC520; color: #1A1A1A; font-family: 'Nunito', sans-serif; box-shadow: 3px 3px 0px #1A1A1A;"
         aria-label={`Agregar ${nombre} al carrito`}
       >
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
@@ -110,13 +110,13 @@ const badgeStyle = badge && badgeColors[badge] ? badgeColors[badge] : { bg: '#F5
   <!-- Added feedback flash -->
   <div
     class="added-feedback absolute inset-0 flex items-center justify-center rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
-    style="background: rgba(245,166,35,0.10); border: 2px solid #F5A623;"
+    style="background: rgba(229,37,33,0.10); border: 3px solid #E52521;"
   >
-    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full" style="background: #F5A623;">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2C1A0C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-[#1A1A1A]" style="background: #E52521; box-shadow: 3px 3px 0px #1A1A1A;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FDFDFD" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="20 6 9 17 4 12"/>
       </svg>
-      <span class="text-xs font-black" style="color: #2C1A0C;">¡Listo!</span>
+      <span class="text-xs font-black" style="color: #FDFDFD; font-family: 'Nunito', sans-serif;">¡Listo!</span>
     </div>
   </div>
 </article>

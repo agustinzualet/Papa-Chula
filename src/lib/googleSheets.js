@@ -1,22 +1,12 @@
 import Papa from 'papaparse';
 
-// TODO: Reemplazar con la URL del Google Sheet del nuevo cliente
-// Pasos: Sheet > Archivo > Compartir > Publicar en la web > CSV > Copiar enlace
-const GOOGLE_SHEET_URL = '';
+// URL del Google Sheet de Papa Chula
+const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRo9B702Y7KX9SXJ9_tL3tPQhAV5YtNTRZuyB_ihL1fRPLVE7ovRQl6_mbPWxfTL4syVDY3LvRQZhIt/pub?gid=0&single=true&output=csv';
 
-// TODO: Agregar/quitar categorías según el menú del nuevo cliente
-// Keys deben coincidir exactamente con la columna 'categoria' del Google Sheet
+// Mapeo exclusivo de Papa Chula
 const CATEGORY_MAP = {
-    'Entradas': { id: 'entradas', emoji: '🍽️', label: '🍽️ Entradas' },
-    'Hamburguesas': { id: 'hamburguesas', emoji: '🍔', label: '🍔 Hamburguesas' },
-    'Sandwiches': { id: 'sandwiches', emoji: '🥪', label: '🥪 Sándwiches' },
-    'Milanesas': { id: 'milanesas', emoji: '🥩', label: '🥩 Milanesas' },
-    'Lomitos': { id: 'lomitos', emoji: '🥩', label: '🥩 Lomitos' },
-    'Pizzas': { id: 'pizzas', emoji: '🍕', label: '🍕 Pizzas' },
-    'Pastas': { id: 'pastas', emoji: '🍝', label: '🍝 Pastas' },
-    'Guarniciones': { id: 'guarniciones', emoji: '🍟', label: '🍟 Guarniciones' },
-    'Bebidas': { id: 'bebidas', emoji: '🥤', label: '🥤 Bebidas' },
-    'Postres': { id: 'postres', emoji: '🍰', label: '🍰 Postres' },
+    'HOT DOGS': { id: 'hot-dogs', emoji: '🌭', label: '🌭 HOT DOGS' },
+    'PAPAS & TOPPINGS': { id: 'papas-y-toppings', emoji: '🍟', label: '🍟 PAPAS & TOPPINGS' },
 };
 
 export async function getMenuData() {
@@ -72,7 +62,7 @@ export async function getMenuData() {
                             nombre: row.nombre,
                             descripcion: row.descripcion,
                             precio: parseInt(row.precio, 10) || 0,
-                            imagen: row.imagen && row.imagen.trim() !== '' ? row.imagen : '/img/placeholder.jpg',
+                            imagen: row.imagen && row.imagen.trim() !== '' ? row.imagen : null,
                             badge: row.badge && row.badge.trim() !== '' ? row.badge : null
                         });
                     });
