@@ -368,17 +368,25 @@ const SHIPPING_ZONES = [
   function setDeliveryType(type) {
     deliveryType = type;
     if (type === 'delivery') {
-      toggleDelivery.style.background = '#F5A623';
-      toggleDelivery.style.color      = '#2C1A0C';
-      toggleRetiro.style.background   = '#3D2410';
-      toggleRetiro.style.color        = '#9A8070';
+      toggleDelivery.style.background = '#FFC520';
+      toggleDelivery.style.color      = '#1A1A1A';
+      toggleDelivery.style.borderColor = '#1A1A1A';
+      if (toggleRetiro) {
+        toggleRetiro.style.background = '#E0E0E0';
+        toggleRetiro.style.color      = '#555555';
+        toggleRetiro.style.borderColor = '#444';
+      }
       fieldDelivery.classList.remove('hidden');
       fieldRetiro.classList.add('hidden');
     } else {
-      toggleRetiro.style.background   = '#F5A623';
-      toggleRetiro.style.color        = '#2C1A0C';
-      toggleDelivery.style.background = '#3D2410';
-      toggleDelivery.style.color      = '#9A8070';
+      toggleDelivery.style.background = '#E0E0E0';
+      toggleDelivery.style.color      = '#555555';
+      toggleDelivery.style.borderColor = '#444';
+      if (toggleRetiro) {
+        toggleRetiro.style.background = '#FFC520';
+        toggleRetiro.style.color      = '#1A1A1A';
+        toggleRetiro.style.borderColor = '#1A1A1A';
+      }
       fieldRetiro.classList.remove('hidden');
       fieldDelivery.classList.add('hidden');
     }

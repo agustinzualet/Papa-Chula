@@ -20,16 +20,7 @@
   --color-brand-black: #1A1A1A;
   --color-brand-white: #FDFDFD;
 
-  /* ===== Dark theme surfaces (fondo general de la app) ===== */
-  --color-dark-bg: #1A1A1A;
-  --color-dark-surface: #222222;
-  --color-dark-card: #FDFDFD;
-  /* tarjetas blancas sobre fondo negro */
-  --color-dark-border: #1A1A1A;
-  --color-dark-text: #FDFDFD;
-  --color-dark-muted: #AAAAAA;
-
-  /* ===== Light theme surfaces ===== */
+  /* ===== Light theme surfaces (único tema activo) ===== */
   --color-light-bg: #F5F5F5;
   --color-light-surface: #FDFDFD;
   --color-light-card: #FDFDFD;
@@ -52,10 +43,10 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* Dark mode (default) — fondo Negro Tinta */
+  /* Tema único: claro (ignora prefers-color-scheme del sistema) */
   body {
-    background-color: #1A1A1A;
-    color: #FDFDFD;
+    background-color: #F5F5F5;
+    color: #1A1A1A;
     font-family: 'Nunito', 'Inter', system-ui, -apple-system, sans-serif;
     min-height: 100dvh;
     overscroll-behavior: none;
@@ -63,7 +54,7 @@
     position: relative;
   }
 
-  /* Patrón de papas fritas — textura sutil al 8% */
+  /* Patrón de papas fritas — textura sutil al 7% */
   body::before {
     content: '';
     position: fixed;
@@ -72,23 +63,9 @@
     background-image: url('/img/pattern-papas.png');
     background-repeat: repeat;
     background-size: 380px 380px;
-    opacity: 0.08;
+    opacity: 0.07;
     pointer-events: none;
-    mix-blend-mode: screen;
-  }
-
-  /* Light mode via system preference */
-  @media (prefers-color-scheme: light) {
-    body {
-      background-color: #F5F5F5;
-      color: #1A1A1A;
-    }
-
-    /* En modo claro el patrón usa multiply para que los trazos oscuros se vean sobre el fondo claro */
-    body::before {
-      mix-blend-mode: multiply;
-      opacity: 0.07;
-    }
+    mix-blend-mode: multiply;
   }
 
   /* Scrollbar */
@@ -107,15 +84,8 @@
 
   /* Select options */
   select option {
-    background: #1A1A1A;
-    color: #FDFDFD;
-  }
-
-  @media (prefers-color-scheme: light) {
-    select option {
-      background: #FDFDFD;
-      color: #1A1A1A;
-    }
+    background: #FDFDFD;
+    color: #1A1A1A;
   }
 }
 
@@ -124,25 +94,12 @@
 
   /* Surfaces */
   .theme-bg {
-    background-color: #1A1A1A;
-  }
-
-  @media (prefers-color-scheme: light) {
-    .theme-bg {
-      background-color: #F5F5F5;
-    }
+    background-color: #F5F5F5;
   }
 
   .theme-surface {
-    background-color: #222222;
-    border-color: #333333;
-  }
-
-  @media (prefers-color-scheme: light) {
-    .theme-surface {
-      background-color: #FDFDFD;
-      border-color: #DDDDDD;
-    }
+    background-color: #FDFDFD;
+    border-color: #DDDDDD;
   }
 
   /* Tarjetas: fondo blanco, borde negro grueso — efecto sticker/pop-art */
@@ -152,31 +109,12 @@
     color: #1A1A1A;
   }
 
-  @media (prefers-color-scheme: light) {
-    .theme-card {
-      background-color: #FDFDFD;
-      border-color: #1A1A1A;
-    }
-  }
-
   .theme-text {
     color: #1A1A1A;
   }
 
-  @media (prefers-color-scheme: light) {
-    .theme-text {
-      color: #1A1A1A;
-    }
-  }
-
   .theme-muted {
-    color: #666666;
-  }
-
-  @media (prefers-color-scheme: light) {
-    .theme-muted {
-      color: #555555;
-    }
+    color: #555555;
   }
 
   /* Header: fondo Amarillo Mostaza con borde inferior Negro — Papa Chula */
@@ -185,110 +123,47 @@
     border-bottom: 4px solid #1A1A1A;
   }
 
-  @media (prefers-color-scheme: light) {
-    .theme-header {
-      background-color: #FFC520;
-      border-bottom: 4px solid #1A1A1A;
-    }
-  }
-
-  /* Category nav — Negro semitransparente */
+  /* Category nav — fondo claro semitransparente */
   .theme-nav {
-    background-color: rgba(26, 26, 26, 0.97);
+    background-color: rgba(245, 245, 245, 0.97);
     border-bottom: 2px solid #1A1A1A;
   }
 
-  @media (prefers-color-scheme: light) {
-    .theme-nav {
-      background-color: rgba(245, 245, 245, 0.97);
-      border-bottom: 2px solid #1A1A1A;
-    }
-  }
-
-  /* Inactive nav pill — fondo negro/gris con texto blanco */
+  /* Inactive nav pill */
   .theme-pill-inactive {
-    background-color: #333333;
-    color: #AAAAAA;
-  }
-
-  @media (prefers-color-scheme: light) {
-    .theme-pill-inactive {
-      background-color: #E0E0E0;
-      color: #555555;
-    }
+    background-color: #E0E0E0;
+    color: #555555;
   }
 
   /* Inputs */
   .theme-input {
-    background-color: #222222;
-    border-color: #444444;
-    color: #FDFDFD;
-  }
-
-  @media (prefers-color-scheme: light) {
-    .theme-input {
-      background-color: #FDFDFD;
-      border-color: #CCCCCC;
-      color: #1A1A1A;
-    }
+    background-color: #FDFDFD;
+    border-color: #CCCCCC;
+    color: #1A1A1A;
   }
 
   /* Modal */
   .theme-modal {
-    background-color: #1A1A1A;
-    border-color: #333333;
-  }
-
-  @media (prefers-color-scheme: light) {
-    .theme-modal {
-      background-color: #FDFDFD;
-      border-color: #DDDDDD;
-    }
+    background-color: #FDFDFD;
+    border-color: #DDDDDD;
   }
 
   .theme-modal-section {
-    background-color: #222222;
-    border-color: #333333;
-  }
-
-  @media (prefers-color-scheme: light) {
-    .theme-modal-section {
-      background-color: #F5F5F5;
-      border-color: #DDDDDD;
-    }
+    background-color: #F5F5F5;
+    border-color: #DDDDDD;
   }
 
   .theme-modal-footer {
-    background-color: #111111;
+    background-color: #FDFDFD;
     border-top: 3px solid #FFC520;
   }
 
-  @media (prefers-color-scheme: light) {
-    .theme-modal-footer {
-      background-color: #FDFDFD;
-      border-top: 3px solid #FFC520;
-    }
-  }
-
   .theme-close-btn {
-    background-color: #333333;
-    color: #AAAAAA;
-  }
-
-  @media (prefers-color-scheme: light) {
-    .theme-close-btn {
-      background-color: #E0E0E0;
-      color: #555555;
-    }
+    background-color: #E0E0E0;
+    color: #555555;
   }
 
   .theme-divider {
-    border-color: #333333;
-  }
-
-  @media (prefers-color-scheme: light) {
-    .theme-divider {
-      border-color: #DDDDDD;
-    }
+    border-color: #DDDDDD;
   }
 }
